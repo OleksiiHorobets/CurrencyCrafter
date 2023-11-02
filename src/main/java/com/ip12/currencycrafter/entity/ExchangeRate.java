@@ -8,11 +8,11 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "EXCHANGE_RATE")
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "EXCHANGE_RATE")
+@Table(name = "EXCHANGE_RATE", schema = "CURRENCY_SCHEMA")
 public class ExchangeRate {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Currency</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th> Id</th>
+        <th> Name</th>
+        <!--        <th> Rate </th>-->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${currencies.empty}">
+        <td colspan="2"> No Currencies Available</td>
+    </tr>
+    <tr th:each="currency : ${currencies}">
+        <td><span th:text="${currency.id}"> id </span></td>
+        <td><span th:text="${currency.name}"> name </span></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

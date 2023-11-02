@@ -15,17 +15,18 @@ import java.time.LocalDate;
 @Table(name = "EXCHANGE_RATE", schema = "CURRENCY_SCHEMA")
 public class ExchangeRate {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "ID_GENERATOR_EXCHANGE_RATE", sequenceName = "CURRENCY_SCHEMA.EXCHANGE_RATE_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_GENERATOR_EXCHANGE_RATE")
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "\"DATE\"")
-    private LocalDate date;
+    @Column(name = "LOCAL_DATE", columnDefinition = "DATE")
+    private LocalDate localDate;
 
     @Column(name = "RATE")
     private BigDecimal rate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CURRENCY_ID")
     private Currency currency;
 }

@@ -3,41 +3,28 @@ package com.ip12.currencycrafter.entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "CURRENCY")
 public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer id;
+    @Column(name = "ID")
+    private Long id;
 
+    @Column(name = "NAME")
     private String name;
 
     @OneToMany(mappedBy = "currency")
-    private Set<ExchangeRate> exchangeRateSet;
-
-    public Currency(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Currency currency = (Currency) o;
-        return Objects.equals(id, currency.id) && Objects.equals(name, currency.name) && Objects.equals(exchangeRateSet, currency.exchangeRateSet);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, exchangeRateSet);
-    }
+    private Set<ExchangeRate> exchangeRates;
 }

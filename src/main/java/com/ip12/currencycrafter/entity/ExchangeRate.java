@@ -20,13 +20,13 @@ public class ExchangeRate {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "\"DATE\"")
-    private LocalDate date;
+    @Column(name = "LOCAL_DATE", columnDefinition = "DATE")
+    private LocalDate localDate;
 
     @Column(name = "RATE")
     private BigDecimal rate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CURRENCY_ID")
     private Currency currency;
 }

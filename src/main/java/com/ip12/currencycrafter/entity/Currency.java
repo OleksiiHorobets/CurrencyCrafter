@@ -3,6 +3,7 @@ package com.ip12.currencycrafter.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "CURRENCY")
@@ -22,6 +23,6 @@ public class Currency {
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany(mappedBy = "currency")
-    private Set<ExchangeRate> exchangeRates;
+    @OneToMany(mappedBy = "currency", fetch = FetchType.EAGER)
+    private Set<ExchangeRate> exchangeRates = new HashSet<>();
 }

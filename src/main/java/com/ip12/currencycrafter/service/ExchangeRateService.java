@@ -1,10 +1,9 @@
 package com.ip12.currencycrafter.service;
 
-import com.ip12.currencycrafter.entities.Currency;
-import com.ip12.currencycrafter.entities.ExchangeRate;
+import com.ip12.currencycrafter.entity.Currency;
+import com.ip12.currencycrafter.entity.ExchangeRate;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ExchangeRateService {
 

@@ -1,13 +1,13 @@
 package com.ip12.currencycrafter.service;
 
-import com.ip12.currencycrafter.entities.Currency;
-import com.ip12.currencycrafter.entities.ExchangeRate;
-import com.ip12.currencycrafter.repositories.ExchangeRateRepository;
+import com.ip12.currencycrafter.entity.Currency;
+import com.ip12.currencycrafter.entity.ExchangeRate;
+import com.ip12.currencycrafter.exception.ResourceNotFoundException;
+import com.ip12.currencycrafter.repository.ExchangeRateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ExchangeRateServiceImpl implements ExchangeRateService{
@@ -20,32 +20,35 @@ public class ExchangeRateServiceImpl implements ExchangeRateService{
 
     @Override
     public ExchangeRate getById(long id) {
-        Optional<ExchangeRate> exchangeRate = exchangeRateRepository.findById(id);
-        return null;
+        return exchangeRateRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No exchangeRate with id {%s} found!".formatted(id)));
     }
 
     @Override
     public List<ExchangeRate> getAll() {
-        return null;
+        return exchangeRateRepository.findAll();
     }
 
     @Override
     public List<ExchangeRate> getAllByCurrency(Currency currency) {
-        return null;
+        return exchangeRateRepository.findAllByCurrency(currency);
     }
 
     @Override
     public List<ExchangeRate> getAllByCurrency(long currencyId) {
-        return null;
+        return exchangeRateRepository.findAllByCurrency_Id(currencyId);
     }
 
     @Override
     public ExchangeRate update(ExchangeRate exchangeRate) {
-        return null;
+        if (exchangeRateRepository.existsById(exchangeRate.getId())) {
+            throw new ResourceNotFoundException("No exchangeRate with id {%s} found!".formatted(exchangeRate.getId()));
+        }
+        return exchangeRateRepository.save(exchangeRate);
     }
 
     @Override
     public ExchangeRate save(ExchangeRate exchangeRate) {
-        return null;
+        return exchangeRateRepository.save(exchangeRate);
     }
 }

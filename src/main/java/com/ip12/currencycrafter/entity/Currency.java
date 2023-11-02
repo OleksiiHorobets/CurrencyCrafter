@@ -3,6 +3,8 @@ package com.ip12.currencycrafter.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity(name = "CURRENCY")
 @Getter
 @Setter
@@ -12,13 +14,14 @@ import lombok.*;
 @Table(name = "CURRENCY", schema = "CURRENCY_SCHEMA")
 public class Currency {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "ID_GENERATOR_CURRENCY", sequenceName = "CURRENCY_SCHEMA.CURRENCY_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_GENERATOR_CURRENCY")
     @Column(name = "ID")
     private Long id;
 
     @Column(name = "NAME")
     private String name;
 
-//    @OneToMany(mappedBy = "currency")
-//    private Set<ExchangeRate> exchangeRates;
+    @OneToMany(mappedBy = "currency")
+    private Set<ExchangeRate> exchangeRates;
 }

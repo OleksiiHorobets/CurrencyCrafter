@@ -1,5 +1,6 @@
 package com.ip12.currencycrafter.controller;
 
+import com.ip12.currencycrafter.entity.Currency;
 import com.ip12.currencycrafter.service.CurrencyService;
 import com.ip12.currencycrafter.service.ExchangeRateService;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,28 @@ public class CurrencyController {
     }
 
     @GetMapping("/today")
-    public String getTodayCurrencies(Model model) {
+    public String deleteCurrencyById(Model model) {
         model.addAttribute("exchangeRates", exchangeRateService.getAllByDate(LocalDate.of(2022, 2, 5)));
         return "today";
     }
 
     @ResponseBody
     @DeleteMapping("/{currencyId}")
-    public ResponseEntity<?> getTodayCurrencies(@PathVariable(name = "currencyId") Long currencyId) {
+    public ResponseEntity<?> deleteCurrencyById(@PathVariable("currencyId") Long currencyId) {
         currencyService.deleteById(currencyId);
+        return ResponseEntity.ok("ok");
+    }
+
+    @PutMapping
+    public String updateCurrencyById(@RequestBody Currency currency) {
+        currencyService.update(currency);
+        return "update";
+    }
+
+    @ResponseBody
+    @PostMapping
+    public ResponseEntity<?> addCurrency(@RequestBody Currency currency) {
+        currencyService.save(currency);
         return ResponseEntity.ok("ok");
     }
 }

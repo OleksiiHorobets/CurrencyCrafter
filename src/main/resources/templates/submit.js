@@ -8,7 +8,7 @@ const div = document.getElementById("resultDiv");
 const url = "/api/v1/student/registerNewStudent";
 
 body.addEventListener("click", (event) => {
-    if (event.target == submitButton){
+    if (event.target === submitButton){
         const formData = new FormData(form);
         event.preventDefault()
 

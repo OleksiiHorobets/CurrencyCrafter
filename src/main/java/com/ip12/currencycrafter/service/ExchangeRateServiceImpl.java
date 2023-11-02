@@ -7,6 +7,7 @@ import com.ip12.currencycrafter.repository.ExchangeRateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -39,6 +40,11 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     @Override
     public List<ExchangeRate> getAllByCurrency(long currencyId) {
         return exchangeRateRepository.findAllByCurrency_Id(currencyId);
+    }
+
+    @Override
+    public List<ExchangeRate> getAllByDate(LocalDate date) {
+        return exchangeRateRepository.findAllByDate(date);
     }
 
     @Override

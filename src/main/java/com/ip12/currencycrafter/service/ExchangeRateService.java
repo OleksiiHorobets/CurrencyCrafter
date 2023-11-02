@@ -3,6 +3,7 @@ package com.ip12.currencycrafter.service;
 import com.ip12.currencycrafter.entity.Currency;
 import com.ip12.currencycrafter.entity.ExchangeRate;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ExchangeRateService {
@@ -17,8 +18,12 @@ public interface ExchangeRateService {
 
     List<ExchangeRate> getAllByCurrency(long currencyId);
 
+    List<ExchangeRate>  getAllByDate(LocalDate date);
+
     ExchangeRate update(ExchangeRate exchangeRate);
 
     ExchangeRate save(ExchangeRate exchangeRate);
+
+
 
 }

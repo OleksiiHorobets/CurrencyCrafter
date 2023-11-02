@@ -44,7 +44,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public List<ExchangeRate> getAllByDate(LocalDate date) {
-        return exchangeRateRepository.findAllByDate(date);
+        return exchangeRateRepository.findAllByLocalDate(date);
     }
 
     @Override

@@ -18,12 +18,11 @@ public interface ExchangeRateService {
 
     List<ExchangeRate> getAllByCurrency(long currencyId);
 
-    List<ExchangeRate>  getAllByDate(LocalDate date);
+    List<ExchangeRate> getAllByDate(LocalDate date);
 
     ExchangeRate update(ExchangeRate exchangeRate);
 
     ExchangeRate save(ExchangeRate exchangeRate);
-
 
 
 }

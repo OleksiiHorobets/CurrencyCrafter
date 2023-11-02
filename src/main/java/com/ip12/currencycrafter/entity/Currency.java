@@ -1,4 +1,4 @@
-package com.ip12.currencycrafter.entities;
+package com.ip12.currencycrafter.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

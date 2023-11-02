@@ -1,7 +1,7 @@
-package com.ip12.currencycrafter.repositories;
+package com.ip12.currencycrafter.repository;
 
 
-import com.ip12.currencycrafter.entities.ExchangeRate;
+import com.ip12.currencycrafter.entity.ExchangeRate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

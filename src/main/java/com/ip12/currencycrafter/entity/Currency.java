@@ -23,6 +23,6 @@ public class Currency {
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany(mappedBy = "currency", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "currency", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<ExchangeRate> exchangeRates = new HashSet<>();
 }

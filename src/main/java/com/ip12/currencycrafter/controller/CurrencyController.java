@@ -3,10 +3,10 @@ package com.ip12.currencycrafter.controller;
 import com.ip12.currencycrafter.service.CurrencyService;
 import com.ip12.currencycrafter.service.ExchangeRateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -27,5 +27,12 @@ public class CurrencyController {
     public String getTodayCurrencies(Model model) {
         model.addAttribute("exchangeRates", exchangeRateService.getAllByDate(LocalDate.of(2022, 2, 5)));
         return "today";
+    }
+
+    @ResponseBody
+    @DeleteMapping("/{currencyId}")
+    public ResponseEntity<?> getTodayCurrencies(@PathVariable(name = "currencyId") Long currencyId) {
+        currencyService.deleteById(currencyId);
+        return ResponseEntity.ok("ok");
     }
 }

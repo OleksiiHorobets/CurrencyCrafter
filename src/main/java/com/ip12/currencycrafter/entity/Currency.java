@@ -1,21 +1,15 @@
 package com.ip12.currencycrafter.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.Set;
-
-@Entity
+@Entity(name = "CURRENCY")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "CURRENCY")
+@Table(name = "CURRENCY", schema = "CURRENCY_SCHEMA")
 public class Currency {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -25,6 +19,6 @@ public class Currency {
     @Column(name = "NAME")
     private String name;
 
-    @OneToMany(mappedBy = "currency")
-    private Set<ExchangeRate> exchangeRates;
+//    @OneToMany(mappedBy = "currency")
+//    private Set<ExchangeRate> exchangeRates;
 }

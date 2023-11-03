@@ -49,7 +49,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public ExchangeRate update(ExchangeRate exchangeRate) {
-        if (exchangeRateRepository.existsById(exchangeRate.getId())) {
+        if (!exchangeRateRepository.existsById(exchangeRate.getId())) {
             throw new ResourceNotFoundException("No exchangeRate with id {%s} found!".formatted(exchangeRate.getId()));
         }
         return exchangeRateRepository.save(exchangeRate);

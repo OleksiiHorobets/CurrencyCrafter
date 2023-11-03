@@ -27,12 +27,12 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public List<Currency> getAll() {
-        return currencyRepository.findAll();
+        return currencyRepository.findAllByOrderByIdAsc();
     }
 
     @Override
     public Currency update(Currency currency) {
-        if (currencyRepository.existsById(currency.getId())) {
+        if (!currencyRepository.existsById(currency.getId())) {
             throw new ResourceNotFoundException("No currency with id {%s} found!".formatted(currency.getId()));
         }
         return currencyRepository.save(currency);

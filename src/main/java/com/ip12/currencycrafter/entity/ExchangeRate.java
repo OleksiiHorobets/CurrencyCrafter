@@ -15,9 +15,9 @@ import java.time.LocalDate;
 @Table(name = "EXCHANGE_RATE", schema = "CURRENCY_SCHEMA")
 public class ExchangeRate {
     @Id
-    @SequenceGenerator(name = "ID_GENERATOR_EXCHANGE_RATE", sequenceName = "CURRENCY_SCHEMA.EXCHANGE_RATE_SEQ")
+    @SequenceGenerator(name = "ID_GENERATOR_EXCHANGE_RATE", sequenceName = "CURRENCY_SCHEMA.EXCHANGE_RATE_SEQ", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ID_GENERATOR_EXCHANGE_RATE")
-    @Column(name = "ID")
+    @Column(name = "ID", updatable = false)
     private Long id;
 
     @Column(name = "LOCAL_DATE", columnDefinition = "DATE")

@@ -7,9 +7,9 @@
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body data-bs-theme="dark">
-<div th:include="~{base.html :: header}">
+<div th:insert="~{base.html :: header}">
 </div>
-<p class="fs-1 text-center"
+<p class="fs-1 text-center" th:unless="${exchangeRates.isEmpty()}"
    th:text="'Today('+ ${exchangeRates.get(0).getLocalDate()} + ') currencies exchange rates'"></p>
 <div class="container rounded border border-2">
     <table class="text-center table table-hover">
@@ -20,7 +20,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${exchangeRates.empty}">
+        <tr th:if="${exchangeRates.isEmpty()}">
             <td colspan="2"> No rates Available</td>
         </tr>
         <tr th:each="exchangeRate : ${exchangeRates}">

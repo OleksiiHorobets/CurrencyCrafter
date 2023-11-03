@@ -26,7 +26,8 @@ public class CurrencyController {
 
     @GetMapping("/today")
     public String getTodayCurrencies(Model model) {
-        model.addAttribute("exchangeRates", exchangeRateService.getAllByDate(LocalDate.of(2022, 2, 5)));
+        var allCurrencies = exchangeRateService.getAllByDate(LocalDate.of(2022, 2, 5));
+        model.addAttribute("exchangeRates", allCurrencies);
         return "today";
     }
 

@@ -11,7 +11,7 @@ const queryString = window.location.search;
 const currencyId = new URLSearchParams(queryString).get("currencyId");
 console.log(currencyId)
 body.addEventListener("click", (event) => {
-    if (submitButton.contains(event.target)){
+    if (submitButton.contains(event.target)) {
 
         const currency = {
             id: currencyId, // Replace with the appropriate ID
@@ -40,7 +40,7 @@ body.addEventListener("click", (event) => {
                 div.innerHTML = "Done";
             })
             .catch(error => {
-                div.innerHTML  = error.message;
+                div.innerHTML = error.message;
             });
     }
 

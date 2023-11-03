@@ -7,7 +7,7 @@ const div = document.getElementById("resultDiv");
 // URL where you want to send the request
 const url = "/currency";
 body.addEventListener("click", (event) => {
-    if (submitButton.contains(event.target)){
+    if (submitButton.contains(event.target)) {
 
         const currency = {
             name: document.getElementById("input").value, // Replace with the updated name
@@ -35,7 +35,7 @@ body.addEventListener("click", (event) => {
                 div.innerHTML = "Done";
             })
             .catch(error => {
-                div.innerHTML  = error.message;
+                div.innerHTML = error.message;
             });
     }
 

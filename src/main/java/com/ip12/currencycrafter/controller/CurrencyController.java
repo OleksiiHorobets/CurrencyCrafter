@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping("/currency")
+@RequestMapping("/currencies")
 @RequiredArgsConstructor
 public class CurrencyController {
     private final CurrencyService currencyService;
@@ -31,13 +31,13 @@ public class CurrencyController {
         return "today";
     }
 
-    @GetMapping("/updateform")
-    public String getUpdateForm(Model model, @RequestParam(name = "currencyId") Long currencyId) {
+    @GetMapping("/{currencyId}/edit")
+    public String getUpdateForm(Model model, @PathVariable("currencyId") Long currencyId) {
         model.addAttribute("currency", currencyService.getById(currencyId));
         return "update";
     }
 
-    @GetMapping("/addform")
+    @GetMapping("/new")
     public String getAddForm() {
         return "add";
     }
@@ -50,8 +50,8 @@ public class CurrencyController {
     }
 
     @ResponseBody
-    @PutMapping
-    public ResponseEntity<?> updateCurrencyById(@RequestBody Currency currency) {
+    @PutMapping("/{currencyId}")
+    public ResponseEntity<?> updateCurrencyById(@PathVariable("currencyId") Long currencyId, @RequestBody Currency currency) {
         currencyService.update(currency);
         return ResponseEntity.ok("ok");
     }

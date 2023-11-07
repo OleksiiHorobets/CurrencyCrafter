@@ -5,7 +5,7 @@ const form = document.getElementById("form");
 const div = document.getElementById("resultDiv");
 
 // URL where you want to send the request
-const url = "/currency";
+const url = "/currencies";
 body.addEventListener("click", (event) => {
     if (submitButton.contains(event.target)) {
 
@@ -29,7 +29,7 @@ body.addEventListener("click", (event) => {
                     throw new Error(response.text());
                 }
             })
-            .then(data => {
+            .then(() => {
                 // Handle the response data here
                 form.remove();
                 div.innerHTML = "Done";

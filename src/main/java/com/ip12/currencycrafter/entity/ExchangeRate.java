@@ -28,7 +28,7 @@ public class ExchangeRate {
 
 
     //TODO: add custom join @Query
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRENCY_ID")
     private Currency currency;
 }

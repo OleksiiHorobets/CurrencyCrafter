@@ -11,10 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.LocalDate;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.TreeMap;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -25,6 +27,10 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     private final ExchangeRateService exchangeRateService;
     private final CurrencyRepository currencyRepository;
+
+    private static BigDecimal throwingMerger(BigDecimal v1, BigDecimal v2) {
+        throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2));
+    }
 
 
     @Override
@@ -80,21 +86,30 @@ public class CurrencyServiceImpl implements CurrencyService {
         var secondExchangeMap = convertIntoDateToRateMap(exchangeRateService.
                 getAllByCurrencyAndDateLimits(secondCurrencyId, startDate, endDate));
 
-//        var resMap = startDate.datesUntil(endDate)
-//                        .map()
+        return startDate.datesUntil(endDate)
+                .map(date -> convertToLocalDateRateEntry(firstExchangeMap, secondExchangeMap, date))
+                .collect(
+                        toMap(
+                                SimpleEntry::getKey,
+                                SimpleEntry::getValue,
+                                CurrencyServiceImpl::throwingMerger,
+                                TreeMap::new
+                        )
+                );
+    }
 
-        firstExchangeMap.keySet()
-                .stream()
-                .map(dateKey -> Optional.ofNullable(secondExchangeMap.get(dateKey)));
+    private SimpleEntry<LocalDate, BigDecimal> convertToLocalDateRateEntry(Map<LocalDate, BigDecimal> firstExchangeMap, Map<LocalDate, BigDecimal> secondExchangeMap, LocalDate date) {
+        var firstExRate = firstExchangeMap.get(date);
+        var secExRate = secondExchangeMap.get(date);
 
-        return Map.of(
-                LocalDate.now().minusDays(1), BigDecimal.valueOf(123),
-                LocalDate.now(), BigDecimal.valueOf(321)
-        );
+        if (firstExRate != null && secExRate != null) {
+            return new SimpleEntry<>(date, secExRate.divide(firstExRate, MathContext.DECIMAL128));
+        } else {
+            return new SimpleEntry<>(date, BigDecimal.valueOf(-1));
+        }
     }
 
     private Map<LocalDate, BigDecimal> convertIntoDateToRateMap(List<ExchangeRateDto> exchangeRateDtos) {
-
         return exchangeRateDtos.stream()
                 .collect(toMap(ExchangeRateDto::getLocalDate, ExchangeRateDto::getRate));
     }

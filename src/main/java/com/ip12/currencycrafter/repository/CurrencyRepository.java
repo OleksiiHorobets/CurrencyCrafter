@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface CurrencyRepository extends JpaRepository<Currency, Long> {
     List<Currency> findAllByOrderByIdAsc();
+
+    boolean existsByName(String name);
 }

@@ -1,6 +1,5 @@
 package com.ip12.currencycrafter.controller;
 
-import com.ip12.currencycrafter.entity.Currency;
 import com.ip12.currencycrafter.entity.ExchangeRate;
 import com.ip12.currencycrafter.service.CurrencyService;
 import com.ip12.currencycrafter.service.ExchangeRateService;
@@ -12,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor

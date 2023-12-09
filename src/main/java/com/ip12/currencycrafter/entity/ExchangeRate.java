@@ -26,6 +26,8 @@ public class ExchangeRate {
     @Column(name = "RATE")
     private BigDecimal rate;
 
+
+    //TODO: add custom join @Query
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CURRENCY_ID")
     private Currency currency;

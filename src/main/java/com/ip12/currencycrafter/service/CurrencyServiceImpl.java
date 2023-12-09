@@ -1,7 +1,9 @@
 package com.ip12.currencycrafter.service;
 
+import com.ip12.currencycrafter.dto.CurrencyRateInfo;
 import com.ip12.currencycrafter.entity.Currency;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
+import com.ip12.currencycrafter.mapper.CurrencyMapper;
 import com.ip12.currencycrafter.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CurrencyServiceImpl implements CurrencyService {
+    private final CurrencyMapper currencyMapper;
     private final CurrencyRepository currencyRepository;
 
 
@@ -20,26 +23,32 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public Currency getById(long id) {
+    public CurrencyRateInfo getById(long id) {
         return currencyRepository.findById(id)
+                .map(currencyMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("No currency with id {%s} found!".formatted(id)));
     }
 
     @Override
-    public List<Currency> getAll() {
-        return currencyRepository.findAllByOrderByIdAsc();
+    public List<CurrencyRateInfo> getAll() {
+        return currencyRepository.findAllByOrderByIdAsc()
+                .stream()
+                .map(currencyMapper::toDTO)
+                .toList();
     }
 
     @Override
-    public Currency update(Currency currency) {
-        if (!currencyRepository.existsById(currency.getId())) {
-            throw new ResourceNotFoundException("No currency with id {%s} found!".formatted(currency.getId()));
+    public CurrencyRateInfo update(CurrencyRateInfo currencyDto) {
+        Currency currency = currencyMapper.toEntity(currencyDto);
+        if (!currencyRepository.existsById(currencyDto.getId())) {
+            throw new ResourceNotFoundException("No currency with id {%s} found!".formatted(currencyDto.getId()));
         }
-        return currencyRepository.save(currency);
+        return currencyMapper.toDTO(currencyRepository.save(currency));
     }
 
     @Override
-    public Currency save(Currency currency) {
-        return currencyRepository.save(currency);
+    public CurrencyRateInfo save(CurrencyRateInfo currencyDto) {
+        var currency = currencyMapper.toEntity(currencyDto);
+        return currencyMapper.toDTO(currencyRepository.save(currency));
     }
 }

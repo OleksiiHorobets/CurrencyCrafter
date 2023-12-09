@@ -28,13 +28,9 @@ public class CurrencyRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CurrencyRateInfo> findById(@PathVariable Long id) {
-        try {
-            CurrencyRateInfo currencyRateInfo = currencyService.getById(id);
-            return ResponseEntity.ok(currencyRateInfo);
-        } catch (ResourceNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Currency not found", ex);
-        }
+    public ResponseEntity<CurrencyRateInfo> findById(@PathVariable Long id) throws ResourceNotFoundException {
+        CurrencyRateInfo currencyRateInfo = currencyService.getById(id);
+        return ResponseEntity.ok(currencyRateInfo);
     }
 
     @DeleteMapping("/{id}")
@@ -43,17 +39,13 @@ public class CurrencyRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CurrencyRateInfo> update(@PathVariable Long id, @RequestBody CurrencyRateInfo currencyDto) {
-        try {
-            if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
-                return ResponseEntity.badRequest().build();
-            }
-            currencyDto.setId(id);
-            CurrencyRateInfo currencyRateInfo = currencyService.update(currencyDto);
-            return ResponseEntity.ok(currencyRateInfo);
-        } catch (ResourceNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Currency not found", ex);
+    public ResponseEntity<CurrencyRateInfo> update(@PathVariable Long id, @RequestBody CurrencyRateInfo currencyDto) throws ResourceNotFoundException {
+        if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
+            return ResponseEntity.badRequest().build();
         }
+        currencyDto.setId(id);
+        CurrencyRateInfo currencyRateInfo = currencyService.update(currencyDto);
+        return ResponseEntity.ok(currencyRateInfo);
     }
 
     @PostMapping

@@ -44,6 +44,9 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public List<ExchangeRate> getAllByCurrencyAndDateLimits(long currencyId, LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null) {
+            return exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, LocalDate.now().minusWeeks(1), LocalDate.now());
+        }
         return exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, startDate, endDate);
     }
 

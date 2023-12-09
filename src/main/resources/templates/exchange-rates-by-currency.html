@@ -12,12 +12,28 @@
 </div>
 
 <div class="container rounded border border-2">
+    <form class="form border rounded m-2 p-5 bg-light-subtle" id="exchangeRatesForm">
+        <label class="form-label" for="startDate">Start Date:</label>
+        <input class="form-control mb-2 bg-light-subtle" type="date" id="startDate" required>
+
+        <label class="form-label" for="endDate">End Date:</label>
+        <input class="form-control mb-2 bg-light-subtle" type="date" id="endDate" required>
+
+        <button class="btn btn-primary"  type="button" onclick="makeRequest()">Get Exchange Rates</button>
+    </form>
+    <script>
+        function makeRequest() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const requestURL = `/currencies/2/exchange-rates?startDate=${startDate}&endDate=${endDate}`;
+            window.location.replace(requestURL);
+        }
+    </script>
     <table class="text-center table table-hover">
         <thead>
         <tr>
             <th> Exchange Rate</th>
             <th> Date</th>
-            <th> Currency</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +45,6 @@
         <tr th:each="exchangeRate : ${exchangeRates}">
             <td><span th:text="${exchangeRate.rate}"> rate </span></td>
             <td><span th:text="${exchangeRate.localDate}"> date </span></td>
-            <td><span th:text="${exchangeRate.currency.name}"> currency name </span></td>
         </tr>
         </tbody>
     </table>

@@ -9,7 +9,7 @@ const currencyId = match[1];
 
 
 // URL where you want to send the request
-const url = "/currencies/"+currencyId;
+const url = "/currencies/" + currencyId;
 
 body.addEventListener("click", (event) => {
     if (submitButton.contains(event.target)) {

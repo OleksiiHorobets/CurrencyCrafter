@@ -1,9 +1,10 @@
 package com.ip12.currencycrafter.controller;
 
-import com.ip12.currencycrafter.entity.Currency;
+import com.ip12.currencycrafter.dto.CurrencyRateInfo;
 import com.ip12.currencycrafter.service.CurrencyService;
 import com.ip12.currencycrafter.service.ExchangeRateService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import java.net.URI;
 import java.time.LocalDate;
 
 @Controller
+@Slf4j
 @RequestMapping("/currencies")
 @RequiredArgsConstructor
 public class CurrencyController {
@@ -35,7 +37,10 @@ public class CurrencyController {
 
     @GetMapping("/{currencyId}/edit")
     public String getUpdateForm(Model model, @PathVariable("currencyId") Long currencyId) {
-        model.addAttribute("currency", currencyService.getById(currencyId));
+        log.info("Currency with id {} is being edited", currencyId);
+        var currency = currencyService.getById(currencyId);
+        model.addAttribute("currency", currency);
+        log.info("Currency to edit: {}", currency);
         return "update";
     }
 
@@ -53,7 +58,7 @@ public class CurrencyController {
 
     @ResponseBody
     @PutMapping("/{currencyId}")
-    public ResponseEntity<?> updateCurrencyById(@PathVariable("currencyId") Long currencyId, @RequestBody Currency currency) {
+    public ResponseEntity<?> updateCurrencyById(@PathVariable("currencyId") Long currencyId, @RequestBody CurrencyRateInfo currency) {
         currencyService.update(currency);
         return ResponseEntity.ok("ok");
     }
@@ -67,11 +72,11 @@ public class CurrencyController {
 
     @ResponseBody
     @PostMapping
-    public ResponseEntity<?> addCurrency(@RequestBody Currency currencyDto) {
+    public ResponseEntity<?> addCurrency(@RequestBody CurrencyRateInfo currencyDto) {
         if (currencyDto.getId() != null) {
             return ResponseEntity.badRequest().build();
         }
-        Currency currency = currencyService.save(currencyDto);
+        CurrencyRateInfo currency = currencyService.save(currencyDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currency.getId()).toUri();
         return ResponseEntity.created(uri).body(currency);
     }

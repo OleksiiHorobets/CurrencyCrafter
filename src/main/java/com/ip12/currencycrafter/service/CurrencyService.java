@@ -1,6 +1,6 @@
 package com.ip12.currencycrafter.service;
 
-import com.ip12.currencycrafter.entity.Currency;
+import com.ip12.currencycrafter.dto.CurrencyRateInfo;
 
 import java.util.List;
 
@@ -8,11 +8,11 @@ public interface CurrencyService {
 
     void deleteById(long id);
 
-    Currency getById(long id);
+    CurrencyRateInfo getById(long id);
 
-    List<Currency> getAll();
+    List<CurrencyRateInfo> getAll();
 
-    Currency update(Currency currency);
+    CurrencyRateInfo update(CurrencyRateInfo currency);
 
-    Currency save(Currency currency);
+    CurrencyRateInfo save(CurrencyRateInfo currency);
 }

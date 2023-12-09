@@ -43,7 +43,7 @@ public class CurrencyRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CurrencyRateInfo> save(@PathVariable Long id, @RequestBody CurrencyRateInfo currencyDto) {
+    public ResponseEntity<CurrencyRateInfo> update(@PathVariable Long id, @RequestBody CurrencyRateInfo currencyDto) {
         if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
             return ResponseEntity.badRequest().build();
         }

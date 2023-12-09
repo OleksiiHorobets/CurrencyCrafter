@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDate;
 
 @Controller
-@RequestMapping("/currency")
+@RequestMapping("/currencies")
 @RequiredArgsConstructor
 public class CurrencyController {
     private final CurrencyService currencyService;
@@ -26,20 +28,20 @@ public class CurrencyController {
 
     @GetMapping("/today")
     public String getTodayCurrencies(Model model) {
-        var allCurrencies = exchangeRateService.getAllByDate(LocalDate.of(2022, 2, 5));
+        var allCurrencies = exchangeRateService.getAllByDate(LocalDate.now());
         model.addAttribute("exchangeRates", allCurrencies);
         return "today";
     }
 
-    @GetMapping("/updateform")
-    public String getUpdateForm(Model model, @RequestParam(name = "currencyId") Long currencyId) {
+    @GetMapping("/{currencyId}/edit")
+    public String getUpdateForm(Model model, @PathVariable("currencyId") Long currencyId) {
         model.addAttribute("currency", currencyService.getById(currencyId));
         return "update";
     }
 
-    @GetMapping("/addform")
+    @GetMapping("/new")
     public String getAddForm() {
-        return "add";
+        return "add-currency";
     }
 
     @ResponseBody
@@ -50,16 +52,27 @@ public class CurrencyController {
     }
 
     @ResponseBody
-    @PutMapping
-    public ResponseEntity<?> updateCurrencyById(@RequestBody Currency currency) {
+    @PutMapping("/{currencyId}")
+    public ResponseEntity<?> updateCurrencyById(@PathVariable("currencyId") Long currencyId, @RequestBody Currency currency) {
         currencyService.update(currency);
         return ResponseEntity.ok("ok");
     }
 
+//    @ResponseBody
+//    @PostMapping
+//    public ResponseEntity<?> addCurrency(@RequestBody Currency currency) {
+//        currencyService.save(currency);
+//        return ResponseEntity.ok("ok");
+//    }
+
     @ResponseBody
     @PostMapping
-    public ResponseEntity<?> addCurrency(@RequestBody Currency currency) {
-        currencyService.save(currency);
-        return ResponseEntity.ok("ok");
+    public ResponseEntity<?> addCurrency(@RequestBody Currency currencyDto) {
+        if (currencyDto.getId() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Currency currency = currencyService.save(currencyDto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currency.getId()).toUri();
+        return ResponseEntity.created(uri).body(currency);
     }
 }

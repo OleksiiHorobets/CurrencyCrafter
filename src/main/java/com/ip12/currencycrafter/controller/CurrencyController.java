@@ -1,6 +1,6 @@
 package com.ip12.currencycrafter.controller;
 
-import com.ip12.currencycrafter.dto.CurrencyRateInfo;
+import com.ip12.currencycrafter.dto.CurrencyRateDto;
 import com.ip12.currencycrafter.service.CurrencyService;
 import com.ip12.currencycrafter.service.ExchangeRateService;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +11,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.Map;
 
 @Controller
 @Slf4j
@@ -58,7 +60,7 @@ public class CurrencyController {
 
     @ResponseBody
     @PutMapping("/{currencyId}")
-    public ResponseEntity<?> updateCurrencyById(@PathVariable("currencyId") Long currencyId, @RequestBody CurrencyRateInfo currency) {
+    public ResponseEntity<?> updateCurrencyById(@PathVariable("currencyId") Long currencyId, @RequestBody CurrencyRateDto currency) {
         currencyService.update(currency);
         return ResponseEntity.ok("ok");
     }
@@ -72,12 +74,24 @@ public class CurrencyController {
 
     @ResponseBody
     @PostMapping
-    public ResponseEntity<?> addCurrency(@RequestBody CurrencyRateInfo currencyDto) {
+    public ResponseEntity<?> addCurrency(@RequestBody CurrencyRateDto currencyDto) {
         if (currencyDto.getId() != null) {
             return ResponseEntity.badRequest().build();
         }
-        CurrencyRateInfo currency = currencyService.save(currencyDto);
+        CurrencyRateDto currency = currencyService.save(currencyDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currency.getId()).toUri();
         return ResponseEntity.created(uri).body(currency);
+    }
+
+
+    @GetMapping("/{firstCurrencyId}/exchange-rates/")
+    @ResponseBody
+    public Map<LocalDate, BigDecimal> getExchangeRateInDateRangeForCurrency(
+            @PathVariable Long firstCurrencyId,
+            @RequestParam(name = "secondCurrencyId") Long secondCurrencyId,
+            @RequestParam(name = "startDate", required = false) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false) LocalDate endDate
+    ) {
+        return currencyService.getAllExchangeRateInRange(firstCurrencyId, secondCurrencyId, startDate, endDate);
     }
 }

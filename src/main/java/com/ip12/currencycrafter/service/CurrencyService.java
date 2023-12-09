@@ -1,18 +1,24 @@
 package com.ip12.currencycrafter.service;
 
-import com.ip12.currencycrafter.dto.CurrencyRateInfo;
+import com.ip12.currencycrafter.dto.CurrencyRateDto;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface CurrencyService {
 
     void deleteById(long id);
 
-    CurrencyRateInfo getById(long id);
+    CurrencyRateDto getById(long id);
 
-    List<CurrencyRateInfo> getAll();
+    List<CurrencyRateDto> getAll();
 
-    CurrencyRateInfo update(CurrencyRateInfo currency);
+    CurrencyRateDto update(CurrencyRateDto currency);
 
-    CurrencyRateInfo save(CurrencyRateInfo currency);
+    CurrencyRateDto save(CurrencyRateDto currency);
+
+    Map<LocalDate, BigDecimal> getAllExchangeRateInRange(Long firstCurrencyId, Long secondCurrencyId, LocalDate startDate, LocalDate endDate);
+
 }

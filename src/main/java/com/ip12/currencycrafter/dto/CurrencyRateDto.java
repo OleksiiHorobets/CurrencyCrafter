@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CurrencyRateInfo {
+public class CurrencyRateDto {
     private Long id;
     private String name;
     private List<ExchangeRateDto> exchangeRates;

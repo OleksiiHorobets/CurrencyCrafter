@@ -44,12 +44,16 @@ public class CurrencyRestController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CurrencyRateInfo> update(@PathVariable Long id, @RequestBody CurrencyRateInfo currencyDto) {
-        if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
-            return ResponseEntity.badRequest().build();
+        try {
+            if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
+                return ResponseEntity.badRequest().build();
+            }
+            currencyDto.setId(id);
+            CurrencyRateInfo currencyRateInfo = currencyService.update(currencyDto);
+            return ResponseEntity.ok(currencyRateInfo);
+        } catch (ResourceNotFoundException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Currency not found", ex);
         }
-        currencyDto.setId(id);
-        CurrencyRateInfo currencyRateInfo = currencyService.update(currencyDto);
-        return ResponseEntity.ok(currencyRateInfo);
     }
 
     @PostMapping

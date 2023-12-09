@@ -18,6 +18,8 @@ public interface ExchangeRateService {
 
     List<ExchangeRate> getAllByCurrency(long currencyId);
 
+    List<ExchangeRate> getAllByCurrencyAndDateLimits(long currencyId, LocalDate startDate, LocalDate endDate);
+
     List<ExchangeRate> getAllByDate(LocalDate date);
 
     ExchangeRate update(ExchangeRate exchangeRate);

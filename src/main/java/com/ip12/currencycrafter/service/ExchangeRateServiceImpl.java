@@ -43,6 +43,11 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     @Override
+    public List<ExchangeRate> getAllByCurrencyAndDateLimits(long currencyId, LocalDate startDate, LocalDate endDate) {
+        return exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, startDate, endDate);
+    }
+
+    @Override
     public List<ExchangeRate> getAllByDate(LocalDate date) {
         return exchangeRateRepository.findAllByLocalDate(date);
     }
@@ -59,4 +64,6 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     public ExchangeRate save(ExchangeRate exchangeRate) {
         return exchangeRateRepository.save(exchangeRate);
     }
+
+
 }

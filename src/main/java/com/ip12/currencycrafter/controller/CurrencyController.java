@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDate;
 
 @Controller
@@ -26,7 +28,7 @@ public class CurrencyController {
 
     @GetMapping("/today")
     public String getTodayCurrencies(Model model) {
-        var allCurrencies = exchangeRateService.getAllByDate(LocalDate.of(2022, 2, 5));
+        var allCurrencies = exchangeRateService.getAllByDate(LocalDate.now());
         model.addAttribute("exchangeRates", allCurrencies);
         return "today";
     }
@@ -39,7 +41,7 @@ public class CurrencyController {
 
     @GetMapping("/new")
     public String getAddForm() {
-        return "add";
+        return "add-currency";
     }
 
     @ResponseBody
@@ -56,10 +58,21 @@ public class CurrencyController {
         return ResponseEntity.ok("ok");
     }
 
+//    @ResponseBody
+//    @PostMapping
+//    public ResponseEntity<?> addCurrency(@RequestBody Currency currency) {
+//        currencyService.save(currency);
+//        return ResponseEntity.ok("ok");
+//    }
+
     @ResponseBody
     @PostMapping
-    public ResponseEntity<?> addCurrency(@RequestBody Currency currency) {
-        currencyService.save(currency);
-        return ResponseEntity.ok("ok");
+    public ResponseEntity<?> addCurrency(@RequestBody Currency currencyDto) {
+        if (currencyDto.getId() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+        Currency currency = currencyService.save(currencyDto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currency.getId()).toUri();
+        return ResponseEntity.created(uri).body(currency);
     }
 }

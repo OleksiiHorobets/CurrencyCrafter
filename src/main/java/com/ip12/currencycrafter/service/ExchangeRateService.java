@@ -1,7 +1,7 @@
 package com.ip12.currencycrafter.service;
 
+import com.ip12.currencycrafter.dto.ExchangeRateDto;
 import com.ip12.currencycrafter.entity.Currency;
-import com.ip12.currencycrafter.entity.ExchangeRate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,19 +10,21 @@ public interface ExchangeRateService {
 
     void deleteById(long id);
 
-    ExchangeRate getById(long id);
+    ExchangeRateDto getById(long id);
 
-    List<ExchangeRate> getAll();
+    List<ExchangeRateDto> getAll();
 
-    List<ExchangeRate> getAllByCurrency(Currency currency);
+    List<ExchangeRateDto> getAllByCurrency(Currency currency);
 
-    List<ExchangeRate> getAllByCurrency(long currencyId);
+    List<ExchangeRateDto> getAllByCurrency(long currencyId);
 
-    List<ExchangeRate> getAllByDate(LocalDate date);
+    List<ExchangeRateDto> getAllByCurrencyAndDateLimits(long currencyId, LocalDate startDate, LocalDate endDate);
 
-    ExchangeRate update(ExchangeRate exchangeRate);
+    List<ExchangeRateDto> getAllByDate(LocalDate date);
 
-    ExchangeRate save(ExchangeRate exchangeRate);
+    ExchangeRateDto update(ExchangeRateDto exchangeRate);
+
+    ExchangeRateDto save(ExchangeRateDto exchangeRate);
 
 
 }

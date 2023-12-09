@@ -24,7 +24,7 @@
         <tr th:switch="${exchangeRates.size()}">
             <td colspan="3" th:case="0"> No Exchange Rate Available</td>
             <td colspan="3" th:case="1"> 1 Exchange Rate Available</td>
-            <td colspan="3" th:case="*"> <span th:text="${exchangeRates.size()}"></span> Exchange Rates Available </td>
+            <td colspan="3" th:case="*"><span th:text="${exchangeRates.size()}"></span> Exchange Rates Available</td>
         </tr>
         <tr th:each="exchangeRate : ${exchangeRates}">
             <td><span th:text="${exchangeRate.rate}"> rate </span></td>
@@ -33,7 +33,8 @@
         </tr>
         </tbody>
     </table>
-    <button class="btn btn-secondary m-3"><a th:href="@{'/currencies/' +${currencyId} + '/exchange-rates/new'}" class="text-decoration-none">Add Exchange Rate</a>
+    <button class="btn btn-secondary m-3"><a th:href="@{'/currencies/' +${currencyId} + '/exchange-rates/new'}"
+                                             class="text-decoration-none">Add Exchange Rate</a>
     </button>
 </div>
 

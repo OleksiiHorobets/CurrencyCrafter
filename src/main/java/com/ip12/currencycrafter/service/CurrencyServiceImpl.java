@@ -3,6 +3,7 @@ package com.ip12.currencycrafter.service;
 import com.ip12.currencycrafter.dto.CurrencyRateInfo;
 import com.ip12.currencycrafter.entity.Currency;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
+import com.ip12.currencycrafter.exception.ResourceUniqueViolationException;
 import com.ip12.currencycrafter.mapper.CurrencyMapper;
 import com.ip12.currencycrafter.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,11 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public CurrencyRateInfo update(CurrencyRateInfo currencyDto) {
         Currency currency = currencyMapper.toEntity(currencyDto);
+
+        if(currencyRepository.existsByName(currency.getName())) {
+            throw new ResourceUniqueViolationException("Currency with name {%s} already exists!".formatted((currencyDto.getName())));
+        }
+
         if (!currencyRepository.existsById(currencyDto.getId())) {
             throw new ResourceNotFoundException("No currency with id {%s} found!".formatted(currencyDto.getId()));
         }
@@ -49,6 +55,11 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public CurrencyRateInfo save(CurrencyRateInfo currencyDto) {
         var currency = currencyMapper.toEntity(currencyDto);
+
+        if(currencyRepository.existsByName(currency.getName())) {
+            throw new ResourceUniqueViolationException("Currency with name {%s} already exists!".formatted((currencyDto.getName())));
+        }
+
         return currencyMapper.toDTO(currencyRepository.save(currency));
     }
 }

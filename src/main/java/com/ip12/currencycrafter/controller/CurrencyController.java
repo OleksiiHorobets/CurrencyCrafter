@@ -3,6 +3,7 @@ package com.ip12.currencycrafter.controller;
 import com.ip12.currencycrafter.dto.CurrencyRateDto;
 import com.ip12.currencycrafter.service.CurrencyService;
 import com.ip12.currencycrafter.service.ExchangeRateService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.Map;
 @Slf4j
 @RequestMapping("/currencies")
 @RequiredArgsConstructor
+@Tag(name = "Currency Controller", description = "Operations with currencies")
 public class CurrencyController {
     private final CurrencyService currencyService;
     private final ExchangeRateService exchangeRateService;

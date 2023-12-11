@@ -1,16 +1,11 @@
 package com.ip12.currencycrafter.controller.api;
 
-import com.ip12.currencycrafter.dto.CurrencyRateInfo;
-import com.ip12.currencycrafter.entity.Currency;
+import com.ip12.currencycrafter.dto.CurrencyRateDto;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
 import com.ip12.currencycrafter.service.CurrencyService;
-import com.ip12.currencycrafter.service.ExchangeRateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -23,13 +18,13 @@ public class CurrencyRestController {
     private final CurrencyService currencyService;
 
     @GetMapping
-    public List<CurrencyRateInfo> findAll() {
+    public List<CurrencyRateDto> findAll() {
         return currencyService.getAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CurrencyRateInfo> findById(@PathVariable Long id) throws ResourceNotFoundException {
-        CurrencyRateInfo currencyRateInfo = currencyService.getById(id);
+    public ResponseEntity<CurrencyRateDto> findById(@PathVariable Long id) throws ResourceNotFoundException {
+        CurrencyRateDto currencyRateInfo = currencyService.getById(id);
         return ResponseEntity.ok(currencyRateInfo);
     }
 
@@ -39,21 +34,21 @@ public class CurrencyRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CurrencyRateInfo> update(@PathVariable Long id, @RequestBody CurrencyRateInfo currencyDto) throws ResourceNotFoundException {
+    public ResponseEntity<CurrencyRateDto> update(@PathVariable Long id, @RequestBody CurrencyRateDto currencyDto) throws ResourceNotFoundException {
         if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
             return ResponseEntity.badRequest().build();
         }
         currencyDto.setId(id);
-        CurrencyRateInfo currencyRateInfo = currencyService.update(currencyDto);
+        CurrencyRateDto currencyRateInfo = currencyService.update(currencyDto);
         return ResponseEntity.ok(currencyRateInfo);
     }
 
     @PostMapping
-    public ResponseEntity<CurrencyRateInfo> create(@RequestBody CurrencyRateInfo currencyDto) {
+    public ResponseEntity<CurrencyRateDto> create(@RequestBody CurrencyRateDto currencyDto) {
         if (currencyDto.getId() != null) {
             return ResponseEntity.badRequest().build();
         }
-        CurrencyRateInfo currencyRateInfo = currencyService.save(currencyDto);
+        CurrencyRateDto currencyRateInfo = currencyService.save(currencyDto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currencyRateInfo.getId()).toUri();
         return ResponseEntity.created(uri).body(currencyRateInfo);
     }

@@ -51,7 +51,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     public CurrencyRateDto update(CurrencyRateDto currencyDto) {
         Currency currency = currencyMapper.toEntity(currencyDto);
 
-        if(currencyRepository.existsByName(currency.getName())) {
+        if (currencyRepository.existsByName(currency.getName())) {
             throw new ResourceUniqueViolationException("Currency with name {%s} already exists!".formatted((currencyDto.getName())));
         }
 
@@ -65,7 +65,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     public CurrencyRateDto save(CurrencyRateDto currencyDto) {
         var currency = currencyMapper.toEntity(currencyDto);
 
-        if(currencyRepository.existsByName(currency.getName())) {
+        if (currencyRepository.existsByName(currency.getName())) {
             throw new ResourceUniqueViolationException("Currency with name {%s} already exists!".formatted((currencyDto.getName())));
         }
 

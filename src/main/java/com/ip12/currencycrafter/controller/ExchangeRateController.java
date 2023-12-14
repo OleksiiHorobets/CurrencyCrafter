@@ -15,15 +15,18 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class ExchangeRateController {
     private final CurrencyService currencyService;
-    private final ExchangeRateService exchangeRateService;
 
-    @GetMapping("/currencies/{currencyId}/exchange-rates")
+    @GetMapping("/currencies/{firstCurrencyId}/exchange-rates")
     public String getAllExchangeRatesByCurrency(Model model,
-                                                @PathVariable("currencyId") Long currencyId,
-                                                @RequestParam(value = "startDate", required = false) LocalDate startDate,
-                                                @RequestParam(value = "endDate", required = false) LocalDate endDate) {
-        model.addAttribute("currencyId", currencyId);
-        model.addAttribute("exchangeRates", exchangeRateService.getAllByCurrencyAndDateLimits(currencyId, startDate, endDate));
+                                                @PathVariable Long firstCurrencyId,
+                                                @RequestParam(name = "secondCurrencyId") Long secondCurrencyId,
+                                                @RequestParam(name = "startDate", required = false) LocalDate startDate,
+                                                @RequestParam(name = "endDate", required = false) LocalDate endDate
+    ) {
+        model.addAttribute("firstCurrency", currencyService.getById(firstCurrencyId));
+        model.addAttribute("secondCurrency", currencyService.getById(secondCurrencyId));
+        model.addAttribute("allCurrencies", currencyService.getAll());
+        model.addAttribute("exchangeRates", currencyService.getAllExchangeRateInRange(firstCurrencyId, secondCurrencyId, startDate, endDate));
         return "exchange-rates-by-currency";
     }
 

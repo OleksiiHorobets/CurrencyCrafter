@@ -83,6 +83,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         var firstExchangeMap = convertIntoDateToRateMap(exchangeRateService.
                 getAllByCurrencyAndDateLimits(firstCurrencyId, startDate, endDate));
 
+
         var secondExchangeMap = convertIntoDateToRateMap(exchangeRateService.
                 getAllByCurrencyAndDateLimits(secondCurrencyId, startDate, endDate));
 

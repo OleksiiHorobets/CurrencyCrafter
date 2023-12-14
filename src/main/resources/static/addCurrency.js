@@ -14,7 +14,7 @@ body.addEventListener("click", (event) => {
         }
         event.preventDefault()
 
-        if(validateISOCode(currency.name)){
+        if (validateISOCode(currency.name)) {
             // Create a fetch request
             fetch(url, {
                 method: "POST", // You can change this to "GET" or other HTTP methods
@@ -39,19 +39,18 @@ body.addEventListener("click", (event) => {
                     div.innerHTML = error.message;
                 });
         }
-        }
+    }
 
 })
 
 
 function validateISOCode(code) {
     const regex = /^[A-Z]{3}$/;
-    if(regex.test(code)){
-        div.innerHTML="";
+    if (regex.test(code)) {
+        div.innerHTML = "";
         return true;
-    }
-    else{
-        div.innerHTML="ISO Code must be 3 capital letters";
+    } else {
+        div.innerHTML = "ISO Code must be 3 capital letters";
         return false;
     }
 }

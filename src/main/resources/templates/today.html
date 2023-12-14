@@ -21,7 +21,8 @@
         <tr th:each="currency : ${currencies}">
             <td><span th:text="${currency.name}"> name </span></td>
             <td th:if="${currency.getExchangeRates().size() == 0}"><span> Not available </span></td>
-            <td th:unless="${currency.getExchangeRates().size() == 0}"><span th:text="${currency.getExchangeRates().get(0).rate}"> Not available </span></td>
+            <td th:unless="${currency.getExchangeRates().size() == 0}"><span
+                    th:text="${currency.getExchangeRates().get(0).rate}"> Not available </span></td>
         </tr>
         </tbody>
     </table>

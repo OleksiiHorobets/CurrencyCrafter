@@ -1,5 +1,6 @@
 package com.ip12.currencycrafter.service;
 
+import com.ip12.currencycrafter.dto.AddExchangeRateRequest;
 import com.ip12.currencycrafter.dto.ExchangeRateDto;
 import com.ip12.currencycrafter.entity.Currency;
 
@@ -24,7 +25,6 @@ public interface ExchangeRateService {
 
     ExchangeRateDto update(ExchangeRateDto exchangeRate);
 
-    ExchangeRateDto save(ExchangeRateDto exchangeRate);
-
+    ExchangeRateDto save(AddExchangeRateRequest exchangeRate);
 
 }

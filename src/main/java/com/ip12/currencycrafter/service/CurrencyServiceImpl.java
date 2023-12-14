@@ -1,6 +1,5 @@
 package com.ip12.currencycrafter.service;
 
-import com.ip12.currencycrafter.dto.CurrencyDto;
 import com.ip12.currencycrafter.dto.CurrencyRateDto;
 import com.ip12.currencycrafter.dto.ExchangeRateDto;
 import com.ip12.currencycrafter.entity.Currency;
@@ -12,13 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -90,7 +87,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         var secondExchangeMap = convertIntoDateToRateMap(exchangeRateService.
                 getAllByCurrencyAndDateLimits(secondCurrencyId, startDate, endDate));
 
-        return startDate.datesUntil(endDate)
+        return startDate.datesUntil(endDate.plusDays(1))
                 .map(date -> convertToLocalDateRateEntry(firstExchangeMap, secondExchangeMap, date))
                 .collect(
                         toMap(

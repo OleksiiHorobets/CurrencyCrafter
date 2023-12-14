@@ -17,23 +17,26 @@
         <div class="row">
             <div class="col">
                 <label class="form-label" for="startDate">Start Date:</label>
-                <input class="form-control mb-2 bg-light-subtle" type="date" id="startDate" required th:value="${startDate}" min="2015-01-01">
+                <input class="form-control mb-2 bg-light-subtle" type="date" id="startDate" required
+                       th:value="${startDate}" min="2015-01-01">
             </div>
             <div class="col">
                 <label class="form-label" for="endDate">End Date:</label>
-                <input class="form-control mb-2 bg-light-subtle" type="date" id="endDate" required th:value="${endDate}" min="2015-01-01">
+                <input class="form-control mb-2 bg-light-subtle" type="date" id="endDate" required th:value="${endDate}"
+                       min="2015-01-01">
             </div>
             <div class="col">
                 <label class="form-label" for="startDate">Currency:</label>
                 <select class="form-select mb-2 bg-light-subtle" id="second-currency">
 
-                    <option th:each="cur : ${allCurrencies}" th:id="${'option ' + cur.id}" th:text="${cur.name}" th:selected="${cur.id == secondCurrency.id}"></option>
+                    <option th:each="cur : ${allCurrencies}" th:id="${'option ' + cur.id}" th:text="${cur.name}"
+                            th:selected="${cur.id == secondCurrency.id}"></option>
                 </select>
             </div>
         </div>
 
 
-        <button class="btn btn-primary"  type="button" onclick="makeRequest()">Get Exchange Rates</button>
+        <button class="btn btn-primary" type="button" onclick="makeRequest()">Get Exchange Rates</button>
     </form>
     <script>
         function makeRequest() {
@@ -70,8 +73,8 @@
         </tr>
         </tbody>
     </table>
-    <button class="btn btn-secondary m-3"><a th:href="@{'/currencies/' +${currencyId} + '/exchange-rates/new'}"
-                                             class="text-decoration-none">Add Exchange Rate</a>
+    <button class="btn btn-secondary m-3"><a th:href="@{'/currencies/' +${firstCurrencyId} + '/exchange-rates/new'}"
+                                             class="text-decoration-none">Add New Exchange Rate</a>
     </button>
 </div>
 

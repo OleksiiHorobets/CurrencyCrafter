@@ -1,13 +1,13 @@
 package com.ip12.currencycrafter.mapper;
 
-import com.ip12.currencycrafter.dto.CurrencyRateInfo;
+import com.ip12.currencycrafter.dto.CurrencyRateDto;
 import com.ip12.currencycrafter.entity.Currency;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CurrencyMapper {
 
-    CurrencyRateInfo toDTO(Currency currency);
+    CurrencyRateDto toDTO(Currency currency);
 
-    Currency toEntity(CurrencyRateInfo currencyRateInfo);
+    Currency toEntity(CurrencyRateDto currencyRateDto);
 }

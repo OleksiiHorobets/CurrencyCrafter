@@ -1,7 +1,10 @@
 package com.ip12.currencycrafter.controller.api;
 
+import com.ip12.currencycrafter.dto.CurrencyDto;
 import com.ip12.currencycrafter.dto.CurrencyRateDto;
+import com.ip12.currencycrafter.exception.BadRequestException;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
+import com.ip12.currencycrafter.exception.ResourceUniqueViolationException;
 import com.ip12.currencycrafter.service.CurrencyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +48,8 @@ public class CurrencyRestController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
     })
     public ResponseEntity<CurrencyRateDto> findById(@PathVariable Long id) throws ResourceNotFoundException {
-        CurrencyRateDto currencyRateInfo = currencyService.getById(id);
-        return ResponseEntity.ok(currencyRateInfo);
+        CurrencyRateDto currencyRateDto = currencyService.getById(id);
+        return ResponseEntity.ok(currencyRateDto);
     }
 
     @DeleteMapping("/{id}")
@@ -69,15 +73,18 @@ public class CurrencyRestController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated"),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Currency with specified name already exists", content = @Content)
     })
-    public ResponseEntity<CurrencyRateDto> update(@PathVariable Long id, @RequestBody CurrencyRateDto currencyDto) throws ResourceNotFoundException {
+    public ResponseEntity<CurrencyRateDto> update(@PathVariable Long id, @RequestBody @Valid CurrencyDto currencyDto) throws ResourceNotFoundException, ResourceUniqueViolationException {
         if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Currency DTO id and path variable id do not match");
         }
-        currencyDto.setId(id);
-        CurrencyRateDto currencyRateInfo = currencyService.update(currencyDto);
-        return ResponseEntity.ok(currencyRateInfo);
+        CurrencyRateDto updatedCurrencyRateDto = new CurrencyRateDto();
+        updatedCurrencyRateDto.setId(id);
+        updatedCurrencyRateDto.setName(currencyDto.getName());
+        CurrencyRateDto currencyRateDto = currencyService.update(updatedCurrencyRateDto);
+        return ResponseEntity.ok(currencyRateDto);
     }
 
     @PostMapping
@@ -90,12 +97,15 @@ public class CurrencyRestController {
             @ApiResponse(responseCode = "400", description = "Currency cannot be created", content = @Content),
             @ApiResponse(responseCode = "409", description = "Currency with specified name already exists", content = @Content)
     })
-    public ResponseEntity<CurrencyRateDto> create(@RequestBody CurrencyRateDto currencyDto) {
+    public ResponseEntity<CurrencyRateDto> create(@RequestBody @Valid CurrencyDto currencyDto) throws ResourceUniqueViolationException {
         if (currencyDto.getId() != null) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException("Currency DTO should not contain id");
         }
-        CurrencyRateDto currencyRateInfo = currencyService.save(currencyDto);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currencyRateInfo.getId()).toUri();
-        return ResponseEntity.created(uri).body(currencyRateInfo);
+
+        CurrencyRateDto newCurrencyRateDto = new CurrencyRateDto();
+        newCurrencyRateDto.setName(currencyDto.getName());
+        CurrencyRateDto currencyRateDto = currencyService.save(newCurrencyRateDto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currencyRateDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(currencyRateDto);
     }
 }

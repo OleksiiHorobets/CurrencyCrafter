@@ -49,12 +49,10 @@ public class ExchangeRateController {
         return "add-exchange-rate";
     }
 
-    @ResponseBody
     @PostMapping("/exchange-rates")
-    public ResponseEntity<?> addExchangeRate(@Valid AddExchangeRateRequest addExchangeRateRequest
-    ) {
+    public String addExchangeRate(@Valid AddExchangeRateRequest addExchangeRateRequest) {
         log.info("Add exchange rate request {}", addExchangeRateRequest);
         exchangeRateService.save(addExchangeRateRequest);
-        return ResponseEntity.ok().build();
+        return "success";
     }
 }

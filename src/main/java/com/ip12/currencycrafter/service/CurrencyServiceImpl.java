@@ -1,5 +1,6 @@
 package com.ip12.currencycrafter.service;
 
+import com.ip12.currencycrafter.dto.CurrencyDto;
 import com.ip12.currencycrafter.dto.CurrencyRateDto;
 import com.ip12.currencycrafter.dto.ExchangeRateDto;
 import com.ip12.currencycrafter.entity.Currency;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -100,6 +102,20 @@ public class CurrencyServiceImpl implements CurrencyService {
                 );
     }
 
+    @Override
+    public List<CurrencyRateDto> getAllWithTodayRate() {
+        return getAll().stream()
+                .map(c -> {
+                    CurrencyRateDto newCurrency = new CurrencyRateDto();
+                    newCurrency.setName(c.getName());
+                    newCurrency.setExchangeRates(c.getExchangeRates().stream()
+                            .filter(e -> e.getLocalDate().equals(LocalDate.now()))
+                            .collect(Collectors.toList()));
+                    newCurrency.setId(c.getId());
+                    return newCurrency;
+                }).toList();
+    }
+
     private SimpleEntry<LocalDate, BigDecimal> convertToLocalDateRateEntry(Map<LocalDate, BigDecimal> firstExchangeMap, Map<LocalDate, BigDecimal> secondExchangeMap, LocalDate date) {
         var firstExRate = firstExchangeMap.get(date);
         var secExRate = secondExchangeMap.get(date);
@@ -115,6 +131,5 @@ public class CurrencyServiceImpl implements CurrencyService {
         return exchangeRateDtos.stream()
                 .collect(toMap(ExchangeRateDto::getLocalDate, ExchangeRateDto::getRate));
     }
-
 
 }

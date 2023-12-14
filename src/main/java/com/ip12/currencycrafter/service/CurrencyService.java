@@ -21,4 +21,5 @@ public interface CurrencyService {
 
     Map<LocalDate, BigDecimal> getAllExchangeRateInRange(Long firstCurrencyId, Long secondCurrencyId, LocalDate startDate, LocalDate endDate);
 
+    List<CurrencyRateDto> getAllWithTodayRate();
 }

@@ -17,9 +17,10 @@ public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long
 
     List<ExchangeRate> findAllByLocalDate(LocalDate date);
 
+
     @Query("""
             SELECT er FROM EXCHANGE_RATE er
-            WHERE er.currency.id = :currencyId 
+            WHERE er.currency.id = :currencyId
             AND er.localDate BETWEEN :startDate AND :endDate
             """)
     List<ExchangeRate> findAllByCurrencyIdAndDateLimits(

@@ -12,12 +12,26 @@
 </div>
 
 <div class="container rounded border border-2">
+    <h1 th:text="${firstCurrency.name}"></h1>
     <form class="form border rounded m-2 p-5 bg-light-subtle" id="exchangeRatesForm">
-        <label class="form-label" for="startDate">Start Date:</label>
-        <input class="form-control mb-2 bg-light-subtle" type="date" id="startDate" required>
+        <div class="row">
+            <div class="col">
+                <label class="form-label" for="startDate">Start Date:</label>
+                <input class="form-control mb-2 bg-light-subtle" type="date" id="startDate" required>
+            </div>
+            <div class="col">
+                <label class="form-label" for="endDate">End Date:</label>
+                <input class="form-control mb-2 bg-light-subtle" type="date" id="endDate" required>
+            </div>
+            <div class="col">
+                <label class="form-label" for="startDate">Currency:</label>
+                <select class="form-select mb-2 bg-light-subtle" id="second-currency">
 
-        <label class="form-label" for="endDate">End Date:</label>
-        <input class="form-control mb-2 bg-light-subtle" type="date" id="endDate" required>
+                    <option th:each="cur : ${allCurrencies}" th:id="${'option ' + cur.id}" th:text="${cur.name}" th:selected="${cur.id == secondCurrency.id}"></option>
+                </select>
+            </div>
+        </div>
+
 
         <button class="btn btn-primary"  type="button" onclick="makeRequest()">Get Exchange Rates</button>
     </form>
@@ -25,14 +39,17 @@
         function makeRequest() {
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
-            const requestURL = `/currencies/2/exchange-rates?startDate=${startDate}&endDate=${endDate}`;
+            const selectElement = document.getElementById("second-currency");
+            const selectedIndex = selectElement.selectedIndex;
+            const selectedOption = selectElement.options[selectedIndex];
+            const requestURL = `/currencies/2/exchange-rates?startDate=${startDate}&endDate=${endDate}&secondCurrencyId=${selectedOption.id.split(' ')[1]}`;
             window.location.replace(requestURL);
         }
     </script>
     <table class="text-center table table-hover">
         <thead>
         <tr>
-            <th> Exchange Rate</th>
+            <th th:text="${'Exchange Rate: ' + firstCurrency.name + ' - ' + secondCurrency.name}"></th>
             <th> Date</th>
         </tr>
         </thead>
@@ -43,8 +60,8 @@
             <td colspan="3" th:case="*"><span th:text="${exchangeRates.size()}"></span> Exchange Rates Available</td>
         </tr>
         <tr th:each="exchangeRate : ${exchangeRates}">
-            <td><span th:text="${exchangeRate.rate}"> rate </span></td>
-            <td><span th:text="${exchangeRate.localDate}"> date </span></td>
+            <td><span th:text="${exchangeRate.value}"> rate </span></td>
+            <td><span th:text="${exchangeRate.key}"> date </span></td>
         </tr>
         </tbody>
     </table>

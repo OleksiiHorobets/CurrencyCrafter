@@ -1,5 +1,6 @@
 package com.ip12.currencycrafter.controller;
 
+import com.ip12.currencycrafter.exception.BadRequestException;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
 import com.ip12.currencycrafter.exception.ResourceUniqueViolationException;
 import org.springframework.http.HttpStatus;
@@ -17,5 +18,10 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ResourceUniqueViolationException.class)
     public ErrorResponse handleResourceUniqueViolationException(ResourceUniqueViolationException ex) {
         return ErrorResponse.create(ex, HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ErrorResponse handleResourceUniqueViolationException(BadRequestException ex) {
+        return ErrorResponse.create(ex, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 }

@@ -28,24 +28,25 @@
     <script>
 
         const spanEl = document.getElementById("UAH-span");
-
-        fetch("/api/v1/currencies/today/uah", {
-            method: "GET", // You can change this to "GET" or other HTTP methods
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json(); // or response.json() if the server returns JSON
-                } else {
-                    throw new Error("not found");
-                }
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch("/api/v1/currencies/today/uah", {
+                method: "GET", // You can change this to "GET" or other HTTP methods
             })
-            .then((r) => {
-                spanEl.value = r;
-            })
-            .catch(error => {
-                spanEl.value = error.message;
-            })
-
+                .then((response) => {
+                    if (response.ok){
+                        return response.json();
+                    }
+                    else{
+                        return new Error("not found");
+                    }
+                })
+                .then((data) => {
+                    spanEl.textContent = "UAH/USD: " + data.rate;
+                })
+                .catch(e =>{
+                    spanEl.textContent = "UAH/USD: not found";
+                })
+        });
     </script>
 </header>
 

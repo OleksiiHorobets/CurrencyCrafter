@@ -17,11 +17,11 @@
         <div class="row">
             <div class="col">
                 <label class="form-label" for="startDate">Start Date:</label>
-                <input class="form-control mb-2 bg-light-subtle" type="date" id="startDate" required>
+                <input class="form-control mb-2 bg-light-subtle" type="date" id="startDate" required th:value="${startDate}" min="2015-01-01">
             </div>
             <div class="col">
                 <label class="form-label" for="endDate">End Date:</label>
-                <input class="form-control mb-2 bg-light-subtle" type="date" id="endDate" required>
+                <input class="form-control mb-2 bg-light-subtle" type="date" id="endDate" required th:value="${endDate}" min="2015-01-01">
             </div>
             <div class="col">
                 <label class="form-label" for="startDate">Currency:</label>
@@ -57,9 +57,9 @@
         </thead>
         <tbody>
         <tr th:switch="${exchangeRates.size()}">
-            <td colspan="3" th:case="0"> No Exchange Rate Available</td>
-            <td colspan="3" th:case="1"> 1 Exchange Rate Available</td>
-            <td colspan="3" th:case="*"><span th:text="${exchangeRates.size()}"></span> Exchange Rates Available</td>
+            <td colspan="3" th:case="0"> No Exchange Rate Shown</td>
+            <td colspan="3" th:case="1"> 1 Exchange Rate Shown</td>
+            <td colspan="3" th:case="*"><span th:text="${exchangeRates.size()}"></span> Exchange Rates Shown</td>
         </tr>
         <tr th:each="exchangeRate : ${exchangeRates}">
             <td>

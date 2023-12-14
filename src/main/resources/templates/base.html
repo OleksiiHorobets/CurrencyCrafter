@@ -34,7 +34,7 @@
         })
             .then(response => {
                 if (response.ok) {
-                    return response.text(); // or response.json() if the server returns JSON
+                    return response.json(); // or response.json() if the server returns JSON
                 } else {
                     throw new Error("not found");
                 }
@@ -45,7 +45,6 @@
             .catch(error => {
                 spanEl.value = error.message;
             })
-
 
     </script>
 </header>

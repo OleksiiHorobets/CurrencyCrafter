@@ -20,12 +20,35 @@
                     Currencies</a>
             </div>
             <div class="col justify-content-end text-end">
-                <a href="/currencies"
-                   class="link-secondary link-offset-2 link-underline-opacity-0 link-underline-opacity-100-hover">Login</a>
+                <span id="UAH-span"></span>
             </div>
         </div>
 
     </div>
+    <script>
+
+        const spanEl = document.getElementById("UAH-span");
+
+        fetch("/api/v1/currencies/today/uah", {
+            method: "GET", // You can change this to "GET" or other HTTP methods
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text(); // or response.json() if the server returns JSON
+                } else {
+                    throw new Error("not found");
+                }
+            })
+            .then((r) => {
+                spanEl.value = r;
+            })
+            .catch(error => {
+                spanEl.value = error.message;
+            })
+
+
+    </script>
 </header>
+
 </body>
 </html>

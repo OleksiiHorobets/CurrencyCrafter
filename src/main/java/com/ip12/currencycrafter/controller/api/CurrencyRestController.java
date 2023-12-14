@@ -69,7 +69,8 @@ public class CurrencyRestController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated"),
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Currency with specified name already exists", content = @Content)
     })
     public ResponseEntity<CurrencyRateDto> update(@PathVariable Long id, @RequestBody CurrencyRateDto currencyDto) throws ResourceNotFoundException {
         if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {

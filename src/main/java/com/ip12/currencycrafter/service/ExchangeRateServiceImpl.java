@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -113,7 +114,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
         var exchangeRate = exchangeRateRepository.findByLocalDateAndCurrency_Id(exchangeRateDto.getLocalDate(), currency.getId())
                 .orElseGet(ExchangeRate::new);
 
-        exchangeRate.setRate(exchangeRateDto.getRateToUsd());
+        exchangeRate.setRate(BigDecimal.ONE.divide(exchangeRateDto.getRateToUsd(), MathContext.DECIMAL128));
         exchangeRate.setLocalDate(exchangeRateDto.getLocalDate());
         exchangeRate.setCurrency(currency);
 

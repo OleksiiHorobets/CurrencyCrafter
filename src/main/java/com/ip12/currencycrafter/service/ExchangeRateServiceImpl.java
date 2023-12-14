@@ -58,11 +58,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public List<ExchangeRateDto> getAllByCurrencyAndDateLimits(long currencyId, LocalDate startDate, LocalDate endDate) {
-        List<ExchangeRate> exchangeRateList;
-        if (startDate == null || endDate == null) {
-            exchangeRateList = exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, LocalDate.now().minusWeeks(1), LocalDate.now());
-        }
-        exchangeRateList = exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, startDate, endDate);
+        List<ExchangeRate> exchangeRateList = exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, startDate, endDate);
 
         return exchangeRateList.stream()
                 .map(exchangeRateMapper::toDTO)

@@ -12,10 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.math.BigDecimal;
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Map;
 
 @Controller
 @Slf4j
@@ -86,14 +84,14 @@ public class CurrencyController {
     }
 
 
-    @GetMapping("/{firstCurrencyId}/exchange-rates/")
-    @ResponseBody
-    public Map<LocalDate, BigDecimal> getExchangeRateInDateRangeForCurrency(
-            @PathVariable Long firstCurrencyId,
-            @RequestParam(name = "secondCurrencyId") Long secondCurrencyId,
-            @RequestParam(name = "startDate", required = false) LocalDate startDate,
-            @RequestParam(name = "endDate", required = false) LocalDate endDate
-    ) {
-        return currencyService.getAllExchangeRateInRange(firstCurrencyId, secondCurrencyId, startDate, endDate);
-    }
+//    @GetMapping("/{firstCurrencyId}/exchange-rates/")
+//    @ResponseBody
+//    public Map<LocalDate, BigDecimal> getExchangeRateInDateRangeForCurrency(
+//            @PathVariable Long firstCurrencyId,
+//            @RequestParam(name = "secondCurrencyId") Long secondCurrencyId,
+//            @RequestParam(name = "startDate", required = false) LocalDate startDate,
+//            @RequestParam(name = "endDate", required = false) LocalDate endDate
+//    ) {
+//        return currencyService.getAllExchangeRateInRange(firstCurrencyId, secondCurrencyId, startDate, endDate);
+//    }
 }

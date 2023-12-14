@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import static java.util.stream.Collectors.toMap;
@@ -79,10 +80,11 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public Map<LocalDate, BigDecimal> getAllExchangeRateInRange(Long firstCurrencyId, Long secondCurrencyId, LocalDate startDate, LocalDate endDate) {
+    public Map<LocalDate, BigDecimal> getAllExchangeRateInRange(Long firstCurrencyId, Long secondCurrencyId, LocalDate startDateReq, LocalDate endDateReq) {
+
+
         var firstExchangeMap = convertIntoDateToRateMap(exchangeRateService.
                 getAllByCurrencyAndDateLimits(firstCurrencyId, startDate, endDate));
-
 
         var secondExchangeMap = convertIntoDateToRateMap(exchangeRateService.
                 getAllByCurrencyAndDateLimits(secondCurrencyId, startDate, endDate));

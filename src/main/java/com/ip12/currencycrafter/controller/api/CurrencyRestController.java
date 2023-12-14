@@ -3,6 +3,12 @@ package com.ip12.currencycrafter.controller.api;
 import com.ip12.currencycrafter.dto.CurrencyRateDto;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
 import com.ip12.currencycrafter.service.CurrencyService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,26 +20,57 @@ import java.util.List;
 @RequestMapping("/api/v1/currencies")
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Currency Rest Controller", description = "Operations with currencies (REST API)")
 public class CurrencyRestController {
     private final CurrencyService currencyService;
 
     @GetMapping
+    @Operation(summary = "Get all", description = "Get a list of all Currencies in the database")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully received")
+    })
     public List<CurrencyRateDto> findAll() {
         return currencyService.getAll();
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Get by Id",
+            description = "Get Currency by its Identifier",
+            parameters = {@Parameter(name = "id", description = "Currency Id", example = "5")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully received"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+    })
     public ResponseEntity<CurrencyRateDto> findById(@PathVariable Long id) throws ResourceNotFoundException {
         CurrencyRateDto currencyRateInfo = currencyService.getById(id);
         return ResponseEntity.ok(currencyRateInfo);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete by Id",
+            description = "Delete Currency with specified Identifier",
+            parameters = {@Parameter(name = "id", description = "Currency Id", example = "10")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully deleted"),
+    })
     public void deleteById(@PathVariable Long id) {
         currencyService.deleteById(id);
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Update by Id",
+            description = "Update Currency with specified Identifier",
+            parameters = {@Parameter(name = "id", description = "Currency Id", example = "7")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully updated"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+    })
     public ResponseEntity<CurrencyRateDto> update(@PathVariable Long id, @RequestBody CurrencyRateDto currencyDto) throws ResourceNotFoundException {
         if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
             return ResponseEntity.badRequest().build();
@@ -44,6 +81,15 @@ public class CurrencyRestController {
     }
 
     @PostMapping
+    @Operation(
+            summary = "Create",
+            description = "Create Currency with specified Identifier"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Successfully created"),
+            @ApiResponse(responseCode = "400", description = "Currency cannot be created", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Currency with specified name already exists", content = @Content)
+    })
     public ResponseEntity<CurrencyRateDto> create(@RequestBody CurrencyRateDto currencyDto) {
         if (currencyDto.getId() != null) {
             return ResponseEntity.badRequest().build();

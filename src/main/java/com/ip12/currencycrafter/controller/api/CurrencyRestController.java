@@ -17,6 +17,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -74,7 +76,7 @@ public class CurrencyRestController {
         return (rs, rowNum) -> ExchangeRateDto.builder()
                 .id(rs.getLong("id"))
                 .localDate(rs.getObject("local_date", LocalDate.class))
-                .rate(rs.getBigDecimal("rate"))
+                .rate(BigDecimal.ONE.divide(rs.getBigDecimal("rate"), 3, RoundingMode.HALF_UP))
                 .build();
     }
 

@@ -2,6 +2,7 @@ package com.ip12.currencycrafter.service;
 
 import com.ip12.currencycrafter.dto.AddExchangeRateRequest;
 import com.ip12.currencycrafter.dto.ExchangeRateDto;
+import com.ip12.currencycrafter.dto.UpdateExchangeRateDto;
 import com.ip12.currencycrafter.entity.Currency;
 import com.ip12.currencycrafter.entity.ExchangeRate;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
@@ -79,14 +80,15 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     @Override
-    public ExchangeRateDto update(ExchangeRateDto exchangeRate) {
-        if (!exchangeRateRepository.existsById(exchangeRate.getId())) {
-            throw new ResourceNotFoundException("No exchangeRateDto with id {%s} found!".formatted(exchangeRate.getId()));
-        }
+    public ExchangeRateDto update(Long id, UpdateExchangeRateDto exchangeRate) {
+        var exchangeRateToUpdate = exchangeRateRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No exchangeRateDto with id {%s} found!".formatted(id)));
+
+        exchangeRateToUpdate.setRate(exchangeRate.getRate());
+        exchangeRateToUpdate.setLocalDate(exchangeRate.getLocalDate());
+
         return exchangeRateMapper
-                .toDTO(exchangeRateRepository
-                        .save(exchangeRateMapper
-                                .toEntity(exchangeRate)));
+                .toDTO(exchangeRateRepository.save(exchangeRateToUpdate));
     }
 
     @Override

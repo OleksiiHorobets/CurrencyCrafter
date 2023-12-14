@@ -42,7 +42,9 @@
             const selectElement = document.getElementById("second-currency");
             const selectedIndex = selectElement.selectedIndex;
             const selectedOption = selectElement.options[selectedIndex];
-            const requestURL = `/currencies/2/exchange-rates?startDate=${startDate}&endDate=${endDate}&secondCurrencyId=${selectedOption.id.split(' ')[1]}`;
+            const firstCurrencyId = window.location.href.split("/")[4];
+            console.log(firstCurrencyId);
+            const requestURL = `/currencies/${firstCurrencyId}/exchange-rates?startDate=${startDate}&endDate=${endDate}&secondCurrencyId=${selectedOption.id.split(' ')[1]}`;
             window.location.replace(requestURL);
         }
     </script>
@@ -60,7 +62,10 @@
             <td colspan="3" th:case="*"><span th:text="${exchangeRates.size()}"></span> Exchange Rates Available</td>
         </tr>
         <tr th:each="exchangeRate : ${exchangeRates}">
-            <td><span th:text="${exchangeRate.value}"> rate </span></td>
+            <td>
+                <span th:unless="${exchangeRate.value == -1}" th:text="${exchangeRate.value}"> rate </span>
+                <span th:if="${exchangeRate.value == -1}"> Not available </span>
+            </td>
             <td><span th:text="${exchangeRate.key}"> date </span></td>
         </tr>
         </tbody>

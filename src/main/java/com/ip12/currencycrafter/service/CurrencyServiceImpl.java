@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
@@ -80,9 +81,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public Map<LocalDate, BigDecimal> getAllExchangeRateInRange(Long firstCurrencyId, Long secondCurrencyId, LocalDate startDateReq, LocalDate endDateReq) {
-
-
+    public Map<LocalDate, BigDecimal> getAllExchangeRateInRange(Long firstCurrencyId, Long secondCurrencyId, LocalDate startDate, LocalDate endDate) {
         var firstExchangeMap = convertIntoDateToRateMap(exchangeRateService.
                 getAllByCurrencyAndDateLimits(firstCurrencyId, startDate, endDate));
 
@@ -106,7 +105,7 @@ public class CurrencyServiceImpl implements CurrencyService {
         var secExRate = secondExchangeMap.get(date);
 
         if (firstExRate != null && secExRate != null) {
-            return new SimpleEntry<>(date, secExRate.divide(firstExRate, MathContext.DECIMAL128));
+            return new SimpleEntry<>(date, secExRate.divide(firstExRate, 3, RoundingMode.HALF_UP));
         } else {
             return new SimpleEntry<>(date, BigDecimal.valueOf(-1));
         }

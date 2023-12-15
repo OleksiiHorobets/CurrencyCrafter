@@ -28,4 +28,6 @@ public interface ExchangeRateService {
 
     ExchangeRateDto save(AddExchangeRateRequest exchangeRate);
 
+    ExchangeRateDto getCurrentUahRateToUsd();
+
 }

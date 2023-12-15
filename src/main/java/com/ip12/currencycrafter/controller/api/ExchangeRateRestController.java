@@ -81,11 +81,11 @@ public class ExchangeRateRestController {
 
     @PostMapping
     @Operation(
-            summary = "Create by Id",
-            description = "Create Exchange Rate"
+            summary = "Create",
+            description = "Create new Exchange Rate"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully updated"),
+            @ApiResponse(responseCode = "200", description = "Successfully created"),
     })
     public ResponseEntity<ExchangeRateDto> create(@RequestBody @Valid AddExchangeRateRequest addExchangeRateRequest) {
         var exchangeRate = exchangeRateService.save(addExchangeRateRequest);

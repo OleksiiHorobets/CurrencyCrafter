@@ -11,10 +11,13 @@ import com.ip12.currencycrafter.repository.CurrencyRepository;
 import com.ip12.currencycrafter.repository.ExchangeRateRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +29,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     private final CurrencyRepository currencyRepository;
     private final ExchangeRateRepository exchangeRateRepository;
     private final ExchangeRateMapper exchangeRateMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void deleteById(long id) {
@@ -120,5 +124,29 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
         return exchangeRateMapper
                 .toDTO(exchangeRateRepository.save(exchangeRate));
+    }
+
+    @Override
+    public ExchangeRateDto getCurrentUahRateToUsd() {
+        String sql = """
+                SELECT exchange_rate.id, local_date, rate
+                FROM CURRENCY_SCHEMA.EXCHANGE_RATE as exchange_rate
+                         LEFT JOIN CURRENCY_SCHEMA.CURRENCY as currency on exchange_rate.currency_id = currency.id
+                WHERE currency.name = 'UAH'
+                  and exchange_rate.local_date = CURRENT_DATE
+                 """;
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                mapResultSetToExchangeRateDto()
+        );
+    }
+
+    private RowMapper<ExchangeRateDto> mapResultSetToExchangeRateDto() {
+        return (rs, rowNum) -> ExchangeRateDto.builder()
+                .id(rs.getLong("id"))
+                .localDate(rs.getObject("local_date", LocalDate.class))
+                .rate(BigDecimal.ONE.divide(rs.getBigDecimal("rate"), 3, RoundingMode.HALF_UP))
+                .build();
     }
 }

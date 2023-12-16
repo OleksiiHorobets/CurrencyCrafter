@@ -95,7 +95,7 @@ public class CurrencyRestController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content),
             @ApiResponse(responseCode = "409", description = "Currency with specified name already exists", content = @Content)
     })
-    public ResponseEntity<CurrencyRateDto> update(@PathVariable Long id, @RequestBody @Valid CurrencyDto currencyDto) throws ResourceNotFoundException {
+    public ResponseEntity<CurrencyRateDto> update(@PathVariable Long id, @RequestBody CurrencyDto currencyDto) throws ResourceNotFoundException {
         if (currencyDto.getId() != null && !currencyDto.getId().equals(id)) {
             throw new BadRequestException("Currency DTO ID and path variable ID do not match");
         }
@@ -116,7 +116,7 @@ public class CurrencyRestController {
             @ApiResponse(responseCode = "400", description = "Currency cannot be created", content = @Content),
             @ApiResponse(responseCode = "409", description = "Currency with specified name already exists", content = @Content)
     })
-    public ResponseEntity<CurrencyRateDto> create(@RequestBody @Valid CurrencyDto currencyDto) {
+    public ResponseEntity<CurrencyRateDto> create(@RequestBody CurrencyDto currencyDto) {
         if (currencyDto.getId() != null) {
             throw new BadRequestException("Currency DTO must not contain ID");
         }

@@ -57,6 +57,14 @@ public class CurrencyRestController {
     }
 
     @GetMapping("/today/uah")
+    @Operation(
+            summary = "Get UAH rate",
+            description = "Get current rate of UAH to USD"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully received"),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content)
+    })
     public ResponseEntity<ExchangeRateDto> getCurrentUahRateToUsd() throws ResourceNotFoundException {
         var exchangeRateDto = exchangeRateService.getCurrentUahRateToUsd();
         return ResponseEntity.ok(exchangeRateDto);

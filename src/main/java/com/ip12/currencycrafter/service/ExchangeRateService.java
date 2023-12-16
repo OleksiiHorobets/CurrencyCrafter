@@ -1,6 +1,8 @@
 package com.ip12.currencycrafter.service;
 
+import com.ip12.currencycrafter.dto.AddExchangeRateRequest;
 import com.ip12.currencycrafter.dto.ExchangeRateDto;
+import com.ip12.currencycrafter.dto.UpdateExchangeRateDto;
 import com.ip12.currencycrafter.entity.Currency;
 
 import java.time.LocalDate;
@@ -22,9 +24,10 @@ public interface ExchangeRateService {
 
     List<ExchangeRateDto> getAllByDate(LocalDate date);
 
-    ExchangeRateDto update(ExchangeRateDto exchangeRate);
+    ExchangeRateDto update(Long id, UpdateExchangeRateDto exchangeRate);
 
-    ExchangeRateDto save(ExchangeRateDto exchangeRate);
+    ExchangeRateDto save(AddExchangeRateRequest exchangeRate);
 
+    ExchangeRateDto getCurrentUahRateToUsd();
 
 }

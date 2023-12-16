@@ -13,30 +13,44 @@ body.addEventListener("click", (event) => {
             name: document.getElementById("input").value, // Replace with the updated name
         }
         event.preventDefault()
-        console.log(currency)
-        // Create a fetch request
-        fetch(url, {
-            method: "POST", // You can change this to "GET" or other HTTP methods
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(currency)
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.text(); // or response.json() if the server returns JSON
-                } else {
-                    throw new Error(response.text());
-                }
+
+        if (validateISOCode(currency.name)) {
+            // Create a fetch request
+            fetch(url, {
+                method: "POST", // You can change this to "GET" or other HTTP methods
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(currency)
             })
-            .then(() => {
-                // Handle the response data here
-                form.remove();
-                div.innerHTML = "Done";
-            })
-            .catch(error => {
-                div.innerHTML = error.message;
-            });
+                .then(response => {
+                    if (response.ok) {
+                        return response.text(); // or response.json() if the server returns JSON
+                    } else {
+                        throw new Error(response.text());
+                    }
+                })
+                .then(() => {
+                    // Handle the response data here
+                    form.remove();
+                    div.innerHTML = "Done";
+                })
+                .catch(error => {
+                    div.innerHTML = error.message;
+                });
+        }
     }
 
 })
+
+
+function validateISOCode(code) {
+    const regex = /^[A-Z]{3}$/;
+    if (regex.test(code)) {
+        div.innerHTML = "";
+        return true;
+    } else {
+        div.innerHTML = "ISO Code must be 3 capital letters";
+        return false;
+    }
+}

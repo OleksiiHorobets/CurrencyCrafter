@@ -1,14 +1,23 @@
 package com.ip12.currencycrafter.service;
 
+import com.ip12.currencycrafter.dto.AddExchangeRateRequest;
 import com.ip12.currencycrafter.dto.ExchangeRateDto;
+import com.ip12.currencycrafter.dto.UpdateExchangeRateDto;
 import com.ip12.currencycrafter.entity.Currency;
 import com.ip12.currencycrafter.entity.ExchangeRate;
 import com.ip12.currencycrafter.exception.ResourceNotFoundException;
 import com.ip12.currencycrafter.mapper.ExchangeRateMapper;
+import com.ip12.currencycrafter.repository.CurrencyRepository;
 import com.ip12.currencycrafter.repository.ExchangeRateRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +26,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ExchangeRateServiceImpl implements ExchangeRateService {
 
+    private final CurrencyRepository currencyRepository;
     private final ExchangeRateRepository exchangeRateRepository;
     private final ExchangeRateMapper exchangeRateMapper;
+    private final JdbcTemplate jdbcTemplate;
 
     @Override
     public void deleteById(long id) {
@@ -58,11 +69,7 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public List<ExchangeRateDto> getAllByCurrencyAndDateLimits(long currencyId, LocalDate startDate, LocalDate endDate) {
-        List<ExchangeRate> exchangeRateList;
-        if (startDate == null || endDate == null) {
-            exchangeRateList = exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, LocalDate.now().minusWeeks(1), LocalDate.now());
-        }
-        exchangeRateList = exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, startDate, endDate);
+        List<ExchangeRate> exchangeRateList = exchangeRateRepository.findAllByCurrencyIdAndDateLimits(currencyId, startDate, endDate);
 
         return exchangeRateList.stream()
                 .map(exchangeRateMapper::toDTO)
@@ -78,23 +85,68 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
     }
 
     @Override
-    public ExchangeRateDto update(ExchangeRateDto exchangeRate) {
-        if (!exchangeRateRepository.existsById(exchangeRate.getId())) {
-            throw new ResourceNotFoundException("No exchangeRateDto with id {%s} found!".formatted(exchangeRate.getId()));
-        }
+    public ExchangeRateDto update(Long id, UpdateExchangeRateDto exchangeRate) {
+        var exchangeRateToUpdate = exchangeRateRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No exchangeRateDto with id {%s} found!".formatted(id)));
+
+        exchangeRateToUpdate.setRate(exchangeRate.getRate());
+        exchangeRateToUpdate.setLocalDate(exchangeRate.getLocalDate());
+
         return exchangeRateMapper
-                .toDTO(exchangeRateRepository
-                        .save(exchangeRateMapper
-                                .toEntity(exchangeRate)));
+                .toDTO(exchangeRateRepository.save(exchangeRateToUpdate));
     }
 
     @Override
-    public ExchangeRateDto save(ExchangeRateDto exchangeRate) {
+    @Transactional
+    public ExchangeRateDto save(AddExchangeRateRequest exchangeRateDto) {
+        var usd = currencyRepository.findById(1L)
+                .orElseThrow(() -> new ResourceNotFoundException("No Dollar!"));
+
+        if (usd.getExchangeRates().stream().noneMatch(exchangeRate -> exchangeRate.getLocalDate().equals(exchangeRateDto.getLocalDate()))) {
+            ExchangeRate exchangeRate = ExchangeRate.builder()
+                    .rate(BigDecimal.ONE)
+                    .currency(usd)
+                    .localDate(exchangeRateDto.getLocalDate())
+                    .build();
+            usd.getExchangeRates().add(exchangeRate);
+            currencyRepository.save(usd);
+        }
+
+        var currency = currencyRepository.findByName(exchangeRateDto.getCurrencyName())
+                .orElseThrow(() -> new ResourceNotFoundException("No such currency name present!"));
+
+        var exchangeRate = exchangeRateRepository.findByLocalDateAndCurrency_Id(exchangeRateDto.getLocalDate(), currency.getId())
+                .orElseGet(ExchangeRate::new);
+
+        exchangeRate.setRate(BigDecimal.ONE.divide(exchangeRateDto.getRateToUsd(), MathContext.DECIMAL128));
+        exchangeRate.setLocalDate(exchangeRateDto.getLocalDate());
+        exchangeRate.setCurrency(currency);
+
         return exchangeRateMapper
-                .toDTO(exchangeRateRepository
-                        .save(exchangeRateMapper
-                                .toEntity(exchangeRate)));
+                .toDTO(exchangeRateRepository.save(exchangeRate));
     }
 
+    @Override
+    public ExchangeRateDto getCurrentUahRateToUsd() {
+        String sql = """
+                SELECT exchange_rate.id, local_date, rate
+                FROM CURRENCY_SCHEMA.EXCHANGE_RATE as exchange_rate
+                         LEFT JOIN CURRENCY_SCHEMA.CURRENCY as currency on exchange_rate.currency_id = currency.id
+                WHERE currency.name = 'UAH'
+                  and exchange_rate.local_date = CURRENT_DATE
+                 """;
 
+        return jdbcTemplate.queryForObject(
+                sql,
+                mapResultSetToExchangeRateDto()
+        );
+    }
+
+    private RowMapper<ExchangeRateDto> mapResultSetToExchangeRateDto() {
+        return (rs, rowNum) -> ExchangeRateDto.builder()
+                .id(rs.getLong("id"))
+                .localDate(rs.getObject("local_date", LocalDate.class))
+                .rate(BigDecimal.ONE.divide(rs.getBigDecimal("rate"), 3, RoundingMode.HALF_UP))
+                .build();
+    }
 }

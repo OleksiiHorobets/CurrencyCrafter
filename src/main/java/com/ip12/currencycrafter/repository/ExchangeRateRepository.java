@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long> {
     List<ExchangeRate> findAllByCurrency_Id(Long currencyId);
@@ -29,4 +30,5 @@ public interface ExchangeRateRepository extends JpaRepository<ExchangeRate, Long
             @Param("endDate") LocalDate endDate
     );
 
+    Optional<ExchangeRate> findByLocalDateAndCurrency_Id(LocalDate localDate, Long currencyId);
 }
